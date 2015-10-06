@@ -6,6 +6,7 @@
 package clientsfe;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -44,10 +45,15 @@ public class ClientSFE {
         userIn = new BufferedReader(new InputStreamReader(System.in));
         String userInput;
         
+        System.out.print("input: ");
         while(!(userInput = userIn.readLine()).equals("exit")){
-        out.println(userInput);
-        out.flush();
-        System.out.println(in.readLine());
+            out.println(userInput);
+            out.flush();
+            System.out.println("server: " + in.readLine());
+            for(int i = 1; in.ready(); i++) {
+                System.out.println(in.readLine());
+            }
+            System.out.print("input: ");
         }
         
         in.close();
