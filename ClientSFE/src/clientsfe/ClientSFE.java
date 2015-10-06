@@ -5,11 +5,10 @@
  */
 package clientsfe;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,18 +21,40 @@ public class ClientSFE {
 
     /**
      * @param args the command line arguments
+     * @throws java.io.IOException
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+        String host = "127.0.0.1";
+        System.out.println("Connecting to host " + host + " on port 6666");
+        
+        Socket socket = null;
+        PrintWriter out = null;
+        BufferedReader in = null;
+        
         try {
-            try (Socket socket = new Socket("127.0.0.1", 6666)) {
-                System.out.println("Connected to localhost");
-                BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                System.out.println(input.readLine());
-                socket.close();
-            }
+            socket = new Socket(host, 6666);
+            System.out.println("Connected to host " + host + " on port 6666");
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         } catch (IOException ex) {
             Logger.getLogger(ClientSFE.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        BufferedReader userIn;
+        userIn = new BufferedReader(new InputStreamReader(System.in));
+        String userInput;
+        
+        while(!(userInput = userIn.readLine()).equals("exit")){
+        out.println(userInput);
+        out.flush();
+        System.out.println(in.readLine());
+        }
+        
+        in.close();
+        out.close();
+        userIn.close();
+        socket.close();
+        
     }
     
 }

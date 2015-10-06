@@ -5,9 +5,9 @@
  */
 package serversfe;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -23,22 +23,25 @@ public class ServerSFE {
 
     /**
      * @param args the command line arguments
+     * @throws java.io.IOException
      */
-    public static void main(String[] args) {
-        try {
-            try (ServerSocket ss = new ServerSocket(6666)) {
-                while(true){
-                    try (Socket socket = ss.accept()) {
-                        PrintWriter out = new PrintWriter(socket.getOutputStream());
-                        out.println(new Date().toString());
-                        out.flush();
-                    }
-                }
-            }
-            
-        } catch (IOException ex) {
-            Logger.getLogger(ServerSFE.class.getName()).log(Level.SEVERE, null, ex);
+    public static void main(String[] args) throws IOException {
+        ServerSocket ss = new ServerSocket(6666);
+        Socket client = ss.accept();
+        
+        PrintWriter out = new PrintWriter(client.getOutputStream(), true);
+        BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+        
+        String user;
+        while((user = in.readLine()) != null){
+            out.println(user);
+            out.flush();
         }
+        
+        in.close();
+        out.close();
+        client.close();
+        ss.close();
     }
     
 }
