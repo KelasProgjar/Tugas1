@@ -54,6 +54,14 @@ public class ClientSFE {
                 System.out.println(in.readLine());
             }
             System.out.print("input: ");
+        while(!(userInput = userIn.readLine()).equals("exit")){
+            out.println(userInput);
+            out.flush();
+            System.out.println("server: " + in.readLine());
+            for(int i = 1; in.ready(); i++) {
+                System.out.println(in.readLine());
+            }
+            System.out.print("input: ");
         }
         
         in.close();
